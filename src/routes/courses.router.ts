@@ -2,7 +2,8 @@ import { Router } from "express";
 import { courseControllers, userControllers } from "../controllers";
 import { courseCreateSchema } from "../schemas";
 import {
-  userIdCourseIdExist,
+  courseIdExistMid,
+  userIdExistMid,
   validateBody,
   verifyUserPermission,
 } from "../middlewares";
@@ -18,23 +19,24 @@ coursesRouter.post(
   courseControllers.createCourse
 );
 coursesRouter.get("", courseControllers.readAllCourses);
+
 coursesRouter.post(
-  "/:courseId/users/:userId",
+  "/:courseId/users/:userId",courseIdExistMid,userIdExistMid,
   verifyToken,
   verifyUserPermission,
   courseControllers.includsUserOnCourse
 );
 coursesRouter.delete(
-  "/:courseId/users/:userId",
+  "/:courseId/users/:userId", courseIdExistMid,userIdExistMid,
   verifyToken,
   verifyUserPermission,
   courseControllers.deleteUserOnCourse
 );
 coursesRouter.get(
-  "/:id/users",
+  "/:id/users", 
   verifyToken,
   verifyUserPermission,
   courseControllers.readIdUsersInsideOnCourse
 );
 
-export default coursesRouter;
+export default coursesRouter

@@ -27,21 +27,23 @@ const read = async (): Promise<CourseRead> => {
   return queryResult.rows;
 };
 
-const readId = async (userId: string): Promise<Array<UserCoursesCreate>> => {
-  const query: string = `SELECT 
+const readId = async (id: string): Promise<Array<UserCoursesCreate>> => {
+  const query: string = `SELECT
   "u"."id" AS "userId",
   "u"."name" AS "userName",
   "co"."id" AS "courseId",
   "co"."name" AS "courseName",
   "co"."description" AS "courseDescription",
   "uc"."active" AS "userActiveInCourse"
-   FROM "courses" AS "co" 
+  FROM 
+  "users" AS "u"
   JOIN "userCourses" AS "uc"
-  ON "uc"."userId"="co"."id"
-  JOIN "users" AS "u"
-  ON "uc"."courseId"="u".id
-  WHERE "co"."id"=$1;`;
-  const queryResult: UserCoursesResult = await client.query(query, [userId]);
+  ON "uc"."userId"="u"."id"
+  JOIN "courses" AS "co"
+  ON "co"."id"="uc"."courseId"
+  WHERE "co"."id"=$1;
+  `;
+  const queryResult: UserCoursesResult = await client.query(query, [id]);
   return queryResult.rows;
 };
 
